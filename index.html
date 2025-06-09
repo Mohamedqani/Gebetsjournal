@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Mein Gebetsjournal</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -41,15 +42,6 @@
       font-size: 1.2rem;
       margin-bottom: 10px;
       font-weight: bold;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .prayer-time {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
     }
 
     label {
@@ -91,14 +83,15 @@
       background-color: #0056b3;
     }
   </style>
-  <script src="https://unpkg.com/adhan@4.4.3/dist/adhan.umd.js"></script>
 </head>
 
 <body>
+
   <h1>Mein Gebetsjournal</h1>
+
   <form id="prayerForm">
     <div class="prayer-section">
-      <div class="prayer-header">🌅 Fajr <span class="prayer-time"><span id="fajr_time"></span><small id="fajr_countdown"></small></span></div>
+      <div class="prayer-header">🌅 Fajr</div>
       <label>Gebetet?
         <input type="checkbox" name="fajr_done" />
       </label>
@@ -106,7 +99,7 @@
     </div>
 
     <div class="prayer-section">
-      <div class="prayer-header">☀️ Dhuhr <span class="prayer-time"><span id="dhuhr_time"></span><small id="dhuhr_countdown"></small></span></div>
+      <div class="prayer-header">☀️ Dhuhr</div>
       <label>Gebetet?
         <input type="checkbox" name="dhuhr_done" />
       </label>
@@ -114,7 +107,7 @@
     </div>
 
     <div class="prayer-section">
-      <div class="prayer-header">🌇 Asr <span class="prayer-time"><span id="asr_time"></span><small id="asr_countdown"></small></span></div>
+      <div class="prayer-header">🌇 Asr</div>
       <label>Gebetet?
         <input type="checkbox" name="asr_done" />
       </label>
@@ -122,7 +115,7 @@
     </div>
 
     <div class="prayer-section">
-      <div class="prayer-header">🌆 Maghrib <span class="prayer-time"><span id="maghrib_time"></span><small id="maghrib_countdown"></small></span></div>
+      <div class="prayer-header">🌆 Maghrib</div>
       <label>Gebetet?
         <input type="checkbox" name="maghrib_done" />
       </label>
@@ -130,7 +123,7 @@
     </div>
 
     <div class="prayer-section">
-      <div class="prayer-header">🌙 Isha <span class="prayer-time"><span id="isha_time"></span><small id="isha_countdown"></small></span></div>
+      <div class="prayer-header">🌙 Isha</div>
       <label>Gebetet?
         <input type="checkbox" name="isha_done" />
       </label>
@@ -143,56 +136,6 @@
   <script>
     const form = document.getElementById('prayerForm');
     const prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
-    let prayerTimes = {};
-
-    function formatTime(date) {
-      return date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
-    }
-
-    function updateCountdowns() {
-      const now = new Date();
-      prayers.forEach(prayer => {
-        const time = prayerTimes[prayer];
-        if (!time) return;
-        const diff = time - now;
-        const countdownEl = document.getElementById(`${prayer}_countdown`);
-        if (diff > 0) {
-          const hours = Math.floor(diff / (1000 * 60 * 60));
-          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-          countdownEl.textContent = ` (in ${hours}h ${minutes}m ${seconds}s)`;
-        } else {
-          countdownEl.textContent = ' (bereits vorbei)';
-        }
-      });
-    }
-
-    function setPrayerTimes(times) {
-      for (let prayer of prayers) {
-        const time = times[prayer];
-        document.getElementById(`${prayer}_time`).textContent = formatTime(time);
-        prayerTimes[prayer] = time;
-      }
-      updateCountdowns();
-    }
-
-    function calculatePrayerTimes() {
-      const coords = new adhan.Coordinates(48.1351, 11.5820); // München Koordinaten
-      const params = adhan.CalculationMethod.MoonsightingCommittee();
-      params.madhab = adhan.Madhab.Shafi;
-      const now = new Date();
-      const times = new adhan.PrayerTimes(coords, now, params);
-      setPrayerTimes({
-        fajr: times.fajr,
-        dhuhr: times.dhuhr,
-        asr: times.asr,
-        maghrib: times.maghrib,
-        isha: times.isha
-      });
-    }
-
-    calculatePrayerTimes();
-    setInterval(updateCountdowns, 1000);
 
     function formatICSDate(date) {
       return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
@@ -212,12 +155,23 @@
 
     form.addEventListener('submit', e => {
       e.preventDefault();
+      const today = new Date();
+      const prayerTimes = {
+        fajr: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 5, 0),
+        dhuhr: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 30),
+        asr: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 15, 30),
+        maghrib: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 18, 45),
+        isha: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 20, 0),
+      };
 
       let icsEvents = [];
 
       prayers.forEach(name => {
-        const checked = document.querySelector(`[name=${name}_done]`).checked;
-        const notes = document.querySelector(`[name=${name}_notes]`).value;
+        const checkbox = document.querySelector(`[name=${name}_done]`);
+        const notesField = document.querySelector(`[name=${name}_notes]`);
+        const checked = checkbox.checked;
+        const notes = notesField.value;
+
         if (checked) {
           const label = name.charAt(0).toUpperCase() + name.slice(1);
           icsEvents.push(createICSEvent(`${label} Gebet`, prayerTimes[name], notes));
@@ -251,11 +205,13 @@
 
       alert("Kalender-Datei wurde heruntergeladen.");
 
+      // Felder zurücksetzen nach erfolgreichem Export
       prayers.forEach(name => {
         document.querySelector(`[name=${name}_done]`).checked = false;
         document.querySelector(`[name=${name}_notes]`).value = '';
       });
     });
   </script>
+
 </body>
 </html>
