@@ -46,6 +46,12 @@
       align-items: center;
     }
 
+    .prayer-time {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
     label {
       display: flex;
       align-items: center;
@@ -92,7 +98,7 @@
   <h1>Mein Gebetsjournal</h1>
   <form id="prayerForm">
     <div class="prayer-section">
-      <div class="prayer-header" id="fajr_header">🌅 Fajr <span id="fajr_time"></span></div>
+      <div class="prayer-header">🌅 Fajr <span class="prayer-time"><span id="fajr_time"></span><small id="fajr_countdown"></small></span></div>
       <label>Gebetet?
         <input type="checkbox" name="fajr_done" />
       </label>
@@ -100,7 +106,7 @@
     </div>
 
     <div class="prayer-section">
-      <div class="prayer-header" id="dhuhr_header">☀️ Dhuhr <span id="dhuhr_time"></span></div>
+      <div class="prayer-header">☀️ Dhuhr <span class="prayer-time"><span id="dhuhr_time"></span><small id="dhuhr_countdown"></small></span></div>
       <label>Gebetet?
         <input type="checkbox" name="dhuhr_done" />
       </label>
@@ -108,7 +114,7 @@
     </div>
 
     <div class="prayer-section">
-      <div class="prayer-header" id="asr_header">🌇 Asr <span id="asr_time"></span></div>
+      <div class="prayer-header">🌇 Asr <span class="prayer-time"><span id="asr_time"></span><small id="asr_countdown"></small></span></div>
       <label>Gebetet?
         <input type="checkbox" name="asr_done" />
       </label>
@@ -116,7 +122,7 @@
     </div>
 
     <div class="prayer-section">
-      <div class="prayer-header" id="maghrib_header">🌆 Maghrib <span id="maghrib_time"></span></div>
+      <div class="prayer-header">🌆 Maghrib <span class="prayer-time"><span id="maghrib_time"></span><small id="maghrib_countdown"></small></span></div>
       <label>Gebetet?
         <input type="checkbox" name="maghrib_done" />
       </label>
@@ -124,7 +130,7 @@
     </div>
 
     <div class="prayer-section">
-      <div class="prayer-header" id="isha_header">🌙 Isha <span id="isha_time"></span></div>
+      <div class="prayer-header">🌙 Isha <span class="prayer-time"><span id="isha_time"></span><small id="isha_countdown"></small></span></div>
       <label>Gebetet?
         <input type="checkbox" name="isha_done" />
       </label>
@@ -143,38 +149,50 @@
       return date.getHours().toString().padStart(2, '0') + ':' + date.getMinutes().toString().padStart(2, '0');
     }
 
+    function updateCountdowns() {
+      const now = new Date();
+      prayers.forEach(prayer => {
+        const time = prayerTimes[prayer];
+        if (!time) return;
+        const diff = time - now;
+        const countdownEl = document.getElementById(`${prayer}_countdown`);
+        if (diff > 0) {
+          const hours = Math.floor(diff / (1000 * 60 * 60));
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+          countdownEl.textContent = ` (in ${hours}h ${minutes}m ${seconds}s)`;
+        } else {
+          countdownEl.textContent = ' (bereits vorbei)';
+        }
+      });
+    }
+
     function setPrayerTimes(times) {
       for (let prayer of prayers) {
         const time = times[prayer];
         document.getElementById(`${prayer}_time`).textContent = formatTime(time);
         prayerTimes[prayer] = time;
       }
+      updateCountdowns();
     }
 
     function calculatePrayerTimes() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(pos => {
-          const coords = new adhan.Coordinates(pos.coords.latitude, pos.coords.longitude);
-          const params = adhan.CalculationMethod.MoonsightingCommittee();
-          params.madhab = adhan.Madhab.Shafi;
-          const now = new Date();
-          const times = new adhan.PrayerTimes(coords, now, params);
-          setPrayerTimes({
-            fajr: times.fajr,
-            dhuhr: times.dhuhr,
-            asr: times.asr,
-            maghrib: times.maghrib,
-            isha: times.isha
-          });
-        }, err => {
-          alert("Standortzugriff nicht erlaubt. Bitte aktivieren.");
-        });
-      } else {
-        alert("Geolocation wird nicht unterstützt.");
-      }
+      const coords = new adhan.Coordinates(48.1351, 11.5820); // München Koordinaten
+      const params = adhan.CalculationMethod.MoonsightingCommittee();
+      params.madhab = adhan.Madhab.Shafi;
+      const now = new Date();
+      const times = new adhan.PrayerTimes(coords, now, params);
+      setPrayerTimes({
+        fajr: times.fajr,
+        dhuhr: times.dhuhr,
+        asr: times.asr,
+        maghrib: times.maghrib,
+        isha: times.isha
+      });
     }
 
     calculatePrayerTimes();
+    setInterval(updateCountdowns, 1000);
 
     function formatICSDate(date) {
       return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
