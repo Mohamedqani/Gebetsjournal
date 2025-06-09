@@ -1,221 +1,258 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Mein Gebetsjournal</title>
-
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f8ff;
-      margin: 0;
-      padding: 20px;
-      color: #333;
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 2rem;
-      margin-bottom: 20px;
-    }
-
-    form {
-      max-width: 600px;
-      margin: auto;
-      background: #ffffff;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    }
-
-    .prayer-section {
-      margin-bottom: 20px;
-      padding: 15px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      background: #f9f9f9;
-    }
-
-    .prayer-header {
-      font-size: 1.2rem;
-      margin-bottom: 10px;
-      font-weight: bold;
-    }
-
-    label {
-      display: flex;
-      align-items: center;
-      margin-top: 10px;
-    }
-
-    input[type="checkbox"] {
-      margin-left: 10px;
-      width: 20px;
-      height: 20px;
-    }
-
-    textarea {
-      width: 100%;
-      padding: 10px;
-      font-size: 1rem;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      resize: vertical;
-      margin-top: 10px;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: white;
-      background-color: #007bff;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 20px;
-    }
-
-    button:hover {
-      background-color: #0056b3;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mein Gebetsjournal</title>
+ 
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f8ff;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+ 
+    h1 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 20px;
+    }
+ 
+    form {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+ 
+    .prayer-section {
+      margin-bottom: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: #f9f9f9;
+    }
+ 
+    .prayer-header {
+      font-size: 1.2rem;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+ 
+    label {
+      display: flex;
+      align-items: center;
+      margin-top: 10px;
+    }
+ 
+    input[type="checkbox"] {
+      margin-left: 10px;
+      width: 20px;
+      height: 20px;
+    }
+ 
+    textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      resize: vertical;
+      margin-top: 10px;
+    }
+ 
+    button {
+      width: 100%;
+      padding: 12px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: white;
+      background-color: #007bff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+ 
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
 </head>
-
 <body>
-  <h1>Mein Gebetsjournal</h1>
+ 
+<h1>Mein Gebetsjournal</h1>
+ 
+<form id="prayerForm">
+  <div class="prayer-section">
+    <div class="prayer-header">🌅 Fajr</div>
+    <label>Gebetet?
+      <input type="checkbox" name="fajr_done" />
+    </label>
+    <textarea name="fajr_notes" placeholder="Notiz zum Fajr"></textarea>
+  </div>
+ 
+  <div class="prayer-section">
+    <div class="prayer-header">☀️ Dhuhr</div>
+    <label>Gebetet?
+      <input type="checkbox" name="dhuhr_done" />
+    </label>
+    <textarea name="dhuhr_notes" placeholder="Notiz zum Dhuhr"></textarea>
+  </div>
+ 
+  <div class="prayer-section">
+    <div class="prayer-header">🌇 Asr</div>
+    <label>Gebetet?
+      <input type="checkbox" name="asr_done" />
+    </label>
+    <textarea name="asr_notes" placeholder="Notiz zum Asr"></textarea>
+  </div>
+ 
+  <div class="prayer-section">
+    <div class="prayer-header">🌆 Maghrib</div>
+    <label>Gebetet?
+      <input type="checkbox" name="maghrib_done" />
+    </label>
+    <textarea name="maghrib_notes" placeholder="Notiz zum Maghrib"></textarea>
+  </div>
+ 
+  <div class="prayer-section">
+    <div class="prayer-header">🌙 Isha</div>
+    <label>Gebetet?
+      <input type="checkbox" name="isha_done" />
+    </label>
+    <textarea name="isha_notes" placeholder="Notiz zum Isha"></textarea>
+  </div>
+ 
+  <button type="submit">Speichern & Kalenderexport</button>
+</form>
+ 
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const today = new Date();
+  const prayerTimes = {
+    fajr: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 5, 0),
+    dhuhr: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 30),
+    asr: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 15, 30),
+    maghrib: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 18, 45),
+    isha: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 20, 0),
+  };
 
-  <form id="prayerForm">
-    <div class="prayer-section">
-      <div class="prayer-header">🌅 Fajr</div>
-      <label>Gebetet?
-        <input type="checkbox" name="fajr_done" />
-      </label>
-      <textarea name="fajr_notes" placeholder="Notiz zum Fajr"></textarea>
-    </div>
+  let icsEvents = [];
 
-    <div class="prayer-section">
-      <div class="prayer-header">☀️ Dhuhr</div>
-      <label>Gebetet?
-        <input type="checkbox" name="dhuhr_done" />
-      </label>
-      <textarea name="dhuhr_notes" placeholder="Notiz zum Dhuhr"></textarea>
-    </div>
+  prayers.forEach(name => {
+    const checkbox = document.querySelector(`[name=${name}_done]`);
+    const notesField = document.querySelector(`[name=${name}_notes]`);
+    const checked = checkbox.checked;
+    const notes = notesField.value;
 
-    <div class="prayer-section">
-      <div class="prayer-header">🌇 Asr</div>
-      <label>Gebetet?
-        <input type="checkbox" name="asr_done" />
-      </label>
-      <textarea name="asr_notes" placeholder="Notiz zum Asr"></textarea>
-    </div>
-
-    <div class="prayer-section">
-      <div class="prayer-header">🌆 Maghrib</div>
-      <label>Gebetet?
-        <input type="checkbox" name="maghrib_done" />
-      </label>
-      <textarea name="maghrib_notes" placeholder="Notiz zum Maghrib"></textarea>
-    </div>
-
-    <div class="prayer-section">
-      <div class="prayer-header">🌙 Isha</div>
-      <label>Gebetet?
-        <input type="checkbox" name="isha_done" />
-      </label>
-      <textarea name="isha_notes" placeholder="Notiz zum Isha"></textarea>
-    </div>
-
-    <button type="submit">Speichern & Kalenderexport</button>
-  </form>
-
-  <script>
-    const form = document.getElementById('prayerForm');
-    const prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
-
-    function formatICSDate(date) {
-      return date.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    if (checked) {
+      const label = name.charAt(0).toUpperCase() + name.slice(1);
+      icsEvents.push(createICSEvent(`${label} Gebet`, prayerTimes[name], notes));
     }
+  });
 
-    function createICSEvent(title, startDate, notes) {
-      const endDate = new Date(startDate.getTime() + 30 * 60000);
-      return [
-        'BEGIN:VEVENT',
-        'SUMMARY:' + title,
-        'DTSTART:' + formatICSDate(startDate),
-        'DTEND:' + formatICSDate(endDate),
-        'DESCRIPTION:' + (notes || ''),
-        'END:VEVENT'
-      ].join('\n');
-    }
+  if (icsEvents.length === 0) {
+    alert("Bitte mindestens ein Gebet auswählen.");
+    return;
+  }
 
-    form.addEventListener('submit', e => {
-      e.preventDefault();
-      const today = new Date();
-      const prayerTimes = {
-        fajr: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 5, 0),
-        dhuhr: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 30),
-        asr: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 15, 30),
-        maghrib: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 18, 45),
-        isha: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 20, 0),
-      };
+  const icsContent = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//MeinGebetsjournal//DE',
+    ...icsEvents,
+    'END:VCALENDAR'
+  ].join('\n');
 
-      let icsEvents = [];
+  const blob = new Blob([icsContent], { type: 'text/calendar' });
+  const url = URL.createObjectURL(blob);
 
-      prayers.forEach(name => {
-        const checked = document.querySelector(`[name=${name}_done]`).checked;
-        const notes = document.querySelector(`[name=${name}_notes]`).value;
-        if (checked) {
-          const label = name.charAt(0).toUpperCase() + name.slice(1);
-          icsEvents.push(createICSEvent(`${label} Gebet`, prayerTimes[name], notes));
-        }
-      });
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'gebetsjournal.ics';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 
-      if (icsEvents.length === 0) {
-        alert("Bitte mindestens ein Gebet auswählen.");
-        return;
-      }
+  URL.revokeObjectURL(url);
 
-      const icsContent = [
-        'BEGIN:VCALENDAR',
-        'VERSION:2.0',
-        'PRODID:-//MeinGebetsjournal//DE',
-        ...icsEvents,
-        'END:VCALENDAR'
-      ].join('\n');
+  alert("Kalender-Datei wurde heruntergeladen.");
 
-      const blob = new Blob([icsContent], { type: 'text/calendar' });
-      const url = URL.createObjectURL(blob);
+  // 🔄 NEU: Felder zurücksetzen
+  prayers.forEach(name => {
+    document.querySelector(`[name=${name}_done]`).checked = false;
+    document.querySelector(`[name=${name}_notes]`).value = '';
+  });
+});
 
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = 'gebetsjournal.ics';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-
-      URL.revokeObjectURL(url);
-
-      alert("Kalender-Datei wurde heruntergeladen.");
-    });
-
-    // NEU: Ein-/Ausblenden von Label + Textfeld je nach Checkbox-Zustand
-    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-      checkbox.addEventListener('change', function () {
-        const label = this.closest('label');
-        const textarea = label.nextElementSibling;
-
-        if (this.checked) {
-          if (label) label.style.display = 'none';
-          if (textarea) textarea.style.display = 'none';
-        } else {
-          if (label) label.style.display = 'flex';
-          if (textarea) textarea.style.display = 'block';
-        }
-      });
-    });
-  </script>
+ 
+  function createICSEvent(title, startDate, notes) {
+    const endDate = new Date(startDate.getTime() + 30 * 60000);
+    return [
+      'BEGIN:VEVENT',
+      'SUMMARY:' + title,
+      'DTSTART:' + formatICSDate(startDate),
+      'DTEND:' + formatICSDate(endDate),
+      'DESCRIPTION:' + (notes || ''),
+      'END:VEVENT'
+    ].join('\n');
+  }
+ 
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const today = new Date();
+    const prayerTimes = {
+      fajr: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 5, 0),
+      dhuhr: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 30),
+      asr: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 15, 30),
+      maghrib: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 18, 45),
+      isha: new Date(today.getFullYear(), today.getMonth(), today.getDate(), 20, 0),
+    };
+ 
+    let icsEvents = [];
+ 
+    prayers.forEach(name => {
+      const checked = document.querySelector(`[name=${name}_done]`).checked;
+      const notes = document.querySelector(`[name=${name}_notes]`).value;
+      if (checked) {
+        const label = name.charAt(0).toUpperCase() + name.slice(1);
+        icsEvents.push(createICSEvent(`${label} Gebet`, prayerTimes[name], notes));
+      }
+    });
+ 
+    if (icsEvents.length === 0) {
+      alert("Bitte mindestens ein Gebet auswählen.");
+      return;
+    }
+ 
+    const icsContent = [
+      'BEGIN:VCALENDAR',
+      'VERSION:2.0',
+      'PRODID:-//MeinGebetsjournal//DE',
+      ...icsEvents,
+      'END:VCALENDAR'
+    ].join('\n');
+ 
+    const blob = new Blob([icsContent], { type: 'text/calendar' });
+    const url = URL.createObjectURL(blob);
+ 
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'gebetsjournal.ics';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+ 
+    URL.revokeObjectURL(url);
+ 
+    alert("Kalender-Datei wurde heruntergeladen. ");
+  });
+</script>
+ 
 </body>
 </html>
