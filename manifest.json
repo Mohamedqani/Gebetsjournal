@@ -1,0 +1,13 @@
+{
+  "name": "Mein Gebetsjournal",
+  "short_name": "Gebet",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f0f8ff",
+  "theme_color": "#007bff",
+  "icons": [{
+    "src": "icon.png",
+    "type": "image/png",
+    "sizes": "192x192"
+  }]
+}
